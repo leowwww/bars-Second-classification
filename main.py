@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from model import run
-from train_test_data_struct import train_test
+from train_test_data_struct import train_test, voluem_train_test
 import time
 
 if __name__ == '__main__':
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         weight_con2_ex = []
         bias_lin_ex = []
         weight_lin_ex = []
-        train_loader , x_test , y_test = train_test(k)
+        train_loader , x_test , y_test = voluem_train_test(k)
         a , b , c, acc = run(train_loader=train_loader , x_test= x_test , y_test= y_test , index=0)
         ACC.append(acc)
         '''print(type(a))
@@ -72,22 +72,25 @@ if __name__ == '__main__':
 #############写入excel中
     
     weight_con1 = pd.DataFrame(weight_con1)
-    weight_con1.to_excel('excel\\weight_con1.xlsx')
+    weight_con1.to_excel('excel_volume\\weight_con1.xlsx')
 
     bias_con1 = pd.DataFrame(bias_con1)
-    bias_con1.to_excel('excel\\bias_con1.xlsx')
+    bias_con1.to_excel('excel_volume\\bias_con1.xlsx')
 
     weight_con2 = pd.DataFrame(weight_con2)
-    weight_con2.to_excel('excel\\weight_con2.xlsx')
+    weight_con2.to_excel('excel_volume\\weight_con2.xlsx')
 
     bias_con2 = pd.DataFrame(bias_con2)
-    bias_con2.to_excel('excel\\bias_con2.xlsx')
+    bias_con2.to_excel('excel_volume\\bias_con2.xlsx')
 
     weight_lin = pd.DataFrame(weight_lin)
-    weight_lin.to_excel('excel\\weight_lin.xlsx')
+    weight_lin.to_excel('excel_volume\\weight_lin.xlsx')
 
     bias_lin =pd.DataFrame(bias_lin)
-    bias_lin.to_excel('excel\\bias_lin.xlsx')
+    bias_lin.to_excel('excel_volume\\bias_lin.xlsx')
+
+    ACC = pd.DataFrame(ACC)
+    ACC.to_excel('excel_volume\\accuracy.xlsx')
 
 
 
