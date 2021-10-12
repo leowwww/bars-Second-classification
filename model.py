@@ -8,7 +8,7 @@ from torch.nn.modules.pooling import MaxPool2d
 from torch.utils.data import Dataset , DataLoader,TensorDataset, dataloader
 from data_processing import *
 import time 
-from train_test_data_struct import train_test
+from train_test_data_struct import train_test, voluem_train_test
 
 ##数据处理
 '''x_base , x_volume , y = data_normalization()
@@ -27,7 +27,7 @@ y_train = variable(y_train)
 print(type(x_train))
 deal_dataset = TensorDataset(x_train , y_train)
 train_loader = DataLoader(dataset=deal_dataset , batch_size=1,shuffle=True , num_workers=0)'''
-train_loader , x_test , y_test = train_test(0)
+#train_loader , x_test , y_test = train_test(0)
 
 class NET(nn.Module):
     def __init__(self):
@@ -44,6 +44,7 @@ class NET(nn.Module):
         )
         self.out = nn.Linear(44 ,2)
     def forward(self, x):
+        x = Variable(torch.unsqueeze(x, dim=0).float(), requires_grad=False)###############成交量作为属性多加了一行
         x = self.conv1(x)
         x = self.conv2(x)
         #print('hhhhhhhhhhhhhhh',x.shape)#[1,1,89,3]
@@ -108,12 +109,26 @@ def run(train_loader,x_test , y_test , index):
         if y_test[i] == y_pred[i]:
             result += 1
     print('->>>>>>>>>>>>>>>>>>>>>>>>>>>准确率：{}'.format(result/len(y_test)))
-    return cnn.par()
+    a , b , c = cnn.par()
+    return a,b ,c , result/len(y_test)
     
 
 
 if __name__ =='__main__':
-   train_loader , x_test , y_test = train_test(0)
-   print('开始')
-   a , b ,c =  run(train_loader , x_test , y_test) 
-   print(a.__len__())
+    cnn = NET() 
+    a , b , c = cnn.par()
+    print(c)
+    print(a)
+    time.sleep(10)
+    
+    #a = [('0.weight', Parametercontaining: tensor([[[[-0.1991, -0.3832],[ 0.2564, -0.0863]]]], requires_grad=True)), ('0.bias', Parameter containing:tensor([-0.0599], requires_grad=True))]
+    ################开高低收作为属性训练
+    train_loader , x_test , y_test = train_test(0)
+    print('开始')
+    a , b ,c =  run(train_loader , x_test , y_test,0) 
+    print(a.__len__())
+    ###################成交量作为属性的训练
+    train_loader , x_test , y_test = voluem_train_test(0)
+    print('开始')
+    a , b ,c ,d=  run(train_loader , x_test , y_test,0) 
+    print(a.__len__())
